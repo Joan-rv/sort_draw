@@ -1,7 +1,10 @@
 #include <SFML/Graphics.hpp>
+#include <drawable_array.hpp>
 
 int main() {
     sf::RenderWindow window(sf::VideoMode({800, 600}), "sort_draw");
+    DrawableArray<100> drawable_array({800, 400}, 2);
+    drawable_array.setPosition({0, 200});
     while (window.isOpen()) {
         while (const std::optional event = window.pollEvent()) {
             if (event->is<sf::Event::Closed>()) {
@@ -14,6 +17,9 @@ int main() {
             }
         }
         window.clear();
+        window.draw(drawable_array);
         window.display();
     }
+
+    return 0;
 }
