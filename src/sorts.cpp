@@ -20,3 +20,17 @@ void insertion_sort(DrawableArray& draw_arr) {
         }
     }
 }
+
+void selection_sort(DrawableArray& draw_arr) {
+    for (size_t i = 0; i + 1 < draw_arr.len(); i++) {
+        size_t i_min = i, min = draw_arr.at(i);
+        for (size_t j = i + 1; j < draw_arr.len(); j++) {
+            size_t elem = draw_arr.at(j);
+            if (elem < min) {
+                min = elem;
+                i_min = j;
+            }
+        }
+        draw_arr.swap(i, i_min);
+    }
+}
