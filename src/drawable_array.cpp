@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <chrono>
 #include <drawable_array.hpp>
+#include <mutex>
 #include <stdexcept>
 #include <thread>
 DrawableArray::DrawableArray(size_t n, sf::Vector2u size, unsigned int padding,
@@ -29,12 +30,20 @@ void DrawableArray::randomise() {
 size_t DrawableArray::len() { return n; }
 
 size_t DrawableArray::at(size_t i) {
+    size_t val;
+    {
+        std::lock_guard<std::mutex> guard(vec_mutex);
+        val = vec[i];
+    }
     std::this_thread::sleep_for(delay);
-    return vec[i];
+    return val;
 }
 
 void DrawableArray::swap(size_t i, size_t j) {
-    std::swap(vec[i], vec[j]);
+    {
+        std::lock_guard<std::mutex> guard(vec_mutex);
+        std::swap(vec[i], vec[j]);
+    }
     std::this_thread::sleep_for(delay);
 }
 
@@ -44,10 +53,15 @@ void DrawableArray::draw(sf::RenderTarget& target,
     unsigned int rect_width = size.x / n;
     unsigned int rect_height = size.y / n;
     for (size_t i = 0; i < n; i++) {
+        size_t val;
+        {
+            std::lock_guard<std::mutex> guard(vec_mutex);
+            val = vec[i];
+        }
         sf::RectangleShape rect(
-            sf::Vector2f(rect_width - padding, rect_height * vec[i]));
+            sf::Vector2f(rect_width - padding, rect_height * val));
         rect.setPosition(
-            sf::Vector2f(padding + rect_width * i, rect_height * (n - vec[i])));
+            sf::Vector2f(padding + rect_width * i, rect_height * (n - val)));
         target.draw(rect, states);
     }
 }

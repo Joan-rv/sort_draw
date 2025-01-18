@@ -5,6 +5,7 @@
 #include <SFML/System/Vector2.hpp>
 #include <chrono>
 #include <cstddef>
+#include <mutex>
 #include <random>
 class DrawableArray : public sf::Drawable, public sf::Transformable {
 public:
@@ -20,6 +21,7 @@ public:
 private:
     size_t n;
     std::vector<size_t> vec;
+    mutable std::mutex vec_mutex;
     sf::Vector2u size;
     unsigned int padding;
     std::mt19937 rand_func;
