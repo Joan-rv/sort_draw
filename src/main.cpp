@@ -26,7 +26,5 @@ int main() {
         window.display();
     }
 
-    sort_thread.join();
-
-    return 0;
+    exit(0);
 }
