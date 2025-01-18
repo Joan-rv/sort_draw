@@ -26,12 +26,12 @@ private:
 template <size_t N>
 DrawableArray<N>::DrawableArray(sf::Vector2u size, unsigned int padding)
     : size(size), padding(padding), rand_func(std::random_device()()) {
-    if (size.x % N != 0 || size.x / N <= 2 * padding || size.y % N != 0 ||
+    if (size.x % N != 0 || size.x / N <= padding || size.y % N != 0 ||
         size.y / N < 1) {
         throw std::invalid_argument(
             "Invalid combination of size, padding, and N. The "
             "following conditions must hold: "
-            "size.x % N == 0, size.x / N > 2*padding, size.y % N == 0,and "
+            "size.x % N == 0, size.x / N > padding, size.y % N == 0,and "
             "size.y / N >= 1");
     }
     for (size_t i = 0; i < N; i++) {
@@ -52,7 +52,7 @@ void DrawableArray<N>::draw(sf::RenderTarget& target,
     unsigned int rect_height = size.y / N;
     for (size_t i = 0; i < N; i++) {
         sf::RectangleShape rect(
-            sf::Vector2f(rect_width - 2 * padding, rect_height * arr[i]));
+            sf::Vector2f(rect_width - padding, rect_height * arr[i]));
         rect.setPosition(
             sf::Vector2f(padding + rect_width * i, rect_height * (N - arr[i])));
         target.draw(rect, states);
