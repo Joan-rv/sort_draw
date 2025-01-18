@@ -16,6 +16,7 @@ public:
               sf::RenderStates render_states) const;
     size_t len();
     size_t at(size_t i);
+    void write(size_t i, size_t val);
     void swap(size_t i, size_t j);
 
 private:

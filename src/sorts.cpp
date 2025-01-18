@@ -34,3 +34,49 @@ void selection_sort(DrawableArray& draw_arr) {
         draw_arr.swap(i, i_min);
     }
 }
+
+void merge_sort_rec(DrawableArray& draw_arr, size_t l, size_t r) {
+    if (r <= l) {
+        return;
+    }
+    size_t m = (l + r) / 2;
+    merge_sort_rec(draw_arr, l, m);
+    merge_sort_rec(draw_arr, m + 1, r);
+
+    std::vector<size_t> aux(r - l + 1);
+    size_t i1 = l, i2 = m + 1, j = 0;
+    while (i1 <= m && i2 <= r) {
+        size_t elem1 = draw_arr.at(i1), elem2 = draw_arr.at(i2);
+        if (elem1 < elem2) {
+            aux[j] = elem1;
+            i1++;
+            j++;
+        } else {
+            aux[j] = elem2;
+            i2++;
+            j++;
+        }
+    }
+
+    while (i1 <= m) {
+        aux[j] = draw_arr.at(i1);
+        i1++;
+        j++;
+    }
+
+    while (i2 <= r) {
+        aux[j] = draw_arr.at(i2);
+        i2++;
+        j++;
+    }
+
+    for (size_t i = 0; i <= r - l; i++) {
+        draw_arr.write(l + i, aux[i]);
+    }
+}
+
+void merge_sort(DrawableArray& draw_arr) {
+    if (draw_arr.len() > 0) {
+        merge_sort_rec(draw_arr, 0, draw_arr.len() - 1);
+    }
+}

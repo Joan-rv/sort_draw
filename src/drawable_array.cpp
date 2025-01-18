@@ -39,6 +39,13 @@ size_t DrawableArray::at(size_t i) {
     return val;
 }
 
+void DrawableArray::write(size_t i, size_t val) {
+    {
+        std::lock_guard<std::mutex> guard(vec_mutex);
+        vec[i] = val;
+    }
+}
+
 void DrawableArray::swap(size_t i, size_t j) {
     {
         std::lock_guard<std::mutex> guard(vec_mutex);
