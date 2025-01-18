@@ -19,11 +19,11 @@ public:
     void swap(size_t i, size_t j);
 
 private:
-    size_t n;
+    const size_t n;
     std::vector<size_t> vec;
     mutable std::mutex vec_mutex;
-    sf::Vector2u size;
-    unsigned int padding;
+    const sf::Vector2u size;
+    const unsigned int padding;
     std::mt19937 rand_func;
-    std::chrono::nanoseconds delay;
+    const std::chrono::nanoseconds delay;
 };
