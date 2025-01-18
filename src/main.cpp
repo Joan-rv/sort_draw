@@ -1,10 +1,14 @@
 #include <SFML/Graphics.hpp>
 #include <drawable_array.hpp>
+#include <functional>
+#include <sorts.hpp>
+#include <thread>
 
 int main() {
     sf::RenderWindow window(sf::VideoMode({800, 600}), "sort_draw");
-    DrawableArray<100> drawable_array({800, 400}, 4);
+    DrawableArray drawable_array(100, {800, 400}, 4);
     drawable_array.setPosition({-2, 200});
+    std::thread sort_thread(bubble_sort, std::ref(drawable_array));
     while (window.isOpen()) {
         while (const std::optional event = window.pollEvent()) {
             if (event->is<sf::Event::Closed>()) {
@@ -20,6 +24,8 @@ int main() {
         window.draw(drawable_array);
         window.display();
     }
+
+    sort_thread.join();
 
     return 0;
 }
