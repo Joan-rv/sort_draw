@@ -5,10 +5,10 @@
 #include <thread>
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode({1000, 600}), "sort_draw");
+    sf::RenderWindow window(sf::VideoMode({1002, 600}), "sort_draw");
     DrawableArray drawable_array(200, {1000, 400}, 2,
                                  std::chrono::milliseconds(1));
-    drawable_array.setPosition({-2, 200});
+    drawable_array.setPosition({0, 200});
     std::thread sort_thread(bubble_sort, std::ref(drawable_array));
     while (window.isOpen()) {
         while (const std::optional event = window.pollEvent()) {
