@@ -1,8 +1,12 @@
 #include <algorithm>
+#include <chrono>
 #include <drawable_array.hpp>
 #include <stdexcept>
-DrawableArray::DrawableArray(size_t n, sf::Vector2u size, unsigned int padding)
-    : n(n), size(size), padding(padding), rand_func(std::random_device()()) {
+#include <thread>
+DrawableArray::DrawableArray(size_t n, sf::Vector2u size, unsigned int padding,
+                             std::chrono::nanoseconds delay)
+    : n(n), size(size), padding(padding), rand_func(std::random_device()()),
+      delay(delay) {
     if (size.x % n != 0 || size.x / n <= padding || size.y % n != 0 ||
         size.y / n < 1) {
         throw std::invalid_argument(
@@ -24,9 +28,15 @@ void DrawableArray::randomise() {
 
 size_t DrawableArray::len() { return n; }
 
-size_t DrawableArray::at(size_t i) { return vec[i]; }
+size_t DrawableArray::at(size_t i) {
+    std::this_thread::sleep_for(delay);
+    return vec[i];
+}
 
-void DrawableArray::swap(size_t i, size_t j) { std::swap(vec[i], vec[j]); }
+void DrawableArray::swap(size_t i, size_t j) {
+    std::swap(vec[i], vec[j]);
+    std::this_thread::sleep_for(delay);
+}
 
 void DrawableArray::draw(sf::RenderTarget& target,
                          sf::RenderStates states) const {

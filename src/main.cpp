@@ -5,8 +5,9 @@
 #include <thread>
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode({800, 600}), "sort_draw");
-    DrawableArray drawable_array(100, {800, 400}, 4);
+    sf::RenderWindow window(sf::VideoMode({1000, 600}), "sort_draw");
+    DrawableArray drawable_array(200, {1000, 400}, 2,
+                                 std::chrono::milliseconds(1));
     drawable_array.setPosition({-2, 200});
     std::thread sort_thread(bubble_sort, std::ref(drawable_array));
     while (window.isOpen()) {
