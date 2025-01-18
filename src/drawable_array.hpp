@@ -15,6 +15,8 @@ public:
     void randomise();
     void draw(sf::RenderTarget& render_target,
               sf::RenderStates render_states) const;
+    size_t at(size_t i);
+    void swap(size_t i, size_t j);
 
 private:
     std::array<size_t, N> arr;
@@ -42,6 +44,12 @@ DrawableArray<N>::DrawableArray(sf::Vector2u size, unsigned int padding)
 
 template <size_t N> void DrawableArray<N>::randomise() {
     std::shuffle(arr.begin(), arr.end(), rand_func);
+}
+
+template <size_t N> size_t DrawableArray<N>::at(size_t i) { return arr[i]; }
+
+template <size_t N> void DrawableArray<N>::swap(size_t i, size_t j) {
+    std::swap(arr[i], arr[j]);
 }
 
 template <size_t N>
