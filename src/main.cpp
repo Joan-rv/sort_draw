@@ -3,8 +3,8 @@
 
 int main() {
     sf::RenderWindow window(sf::VideoMode({800, 600}), "sort_draw");
-    DrawableArray<100> drawable_array({800, 400}, 2);
-    drawable_array.setPosition({0, 200});
+    DrawableArray<100> drawable_array({800, 400}, 4);
+    drawable_array.setPosition({-2, 200});
     while (window.isOpen()) {
         while (const std::optional event = window.pollEvent()) {
             if (event->is<sf::Event::Closed>()) {
