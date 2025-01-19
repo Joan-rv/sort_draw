@@ -38,7 +38,7 @@ size_t DrawableArray::at(size_t i) {
         std::lock_guard<std::mutex> guard(vec_mutex);
         val = vec[i];
     }
-    sine_sound.setPitch(static_cast<double>(val) / n * 22.0);
+    sine_sound.setPitch(static_cast<double>(val) / n * 21.0 + 1.0);
     sine_sound.play();
     std::this_thread::sleep_for(delay);
     sine_sound.pause();
@@ -50,7 +50,7 @@ void DrawableArray::write(size_t i, size_t val) {
         std::lock_guard<std::mutex> guard(vec_mutex);
         vec[i] = val;
     }
-    sine_sound.setPitch(static_cast<double>(val) / n * 22.0);
+    sine_sound.setPitch(static_cast<double>(val) / n * 21.0 + 1.0);
     sine_sound.play();
     std::this_thread::sleep_for(delay);
     sine_sound.pause();
@@ -63,7 +63,7 @@ void DrawableArray::swap(size_t i, size_t j) {
         std::swap(vec[i], vec[j]);
         avg = static_cast<double>(vec[i] + vec[j]) / 2;
     }
-    sine_sound.setPitch(avg / n * 22.0);
+    sine_sound.setPitch(avg / n * 21.0 + 1.0);
     sine_sound.play();
     std::this_thread::sleep_for(delay);
     sine_sound.pause();
