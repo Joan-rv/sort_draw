@@ -80,3 +80,32 @@ void merge_sort(DrawableArray& draw_arr) {
         merge_sort_rec(draw_arr, 0, draw_arr.len() - 1);
     }
 }
+
+void quick_sort_rec(DrawableArray& draw_arr, size_t l, size_t r) {
+    if (r <= l) {
+        return;
+    }
+    size_t pivot = draw_arr.at(l);
+    size_t i = l;
+    size_t j = r;
+    while (true) {
+        while (draw_arr.at(i) < pivot) {
+            i++;
+        }
+        while (draw_arr.at(j) > pivot) {
+            j--;
+        }
+        if (j <= i) {
+            break;
+        }
+        draw_arr.swap(i, j);
+    }
+    quick_sort_rec(draw_arr, l, j);
+    quick_sort_rec(draw_arr, j + 1, r);
+}
+
+void quick_sort(DrawableArray& draw_arr) {
+    if (draw_arr.len() > 0) {
+        quick_sort_rec(draw_arr, 0, draw_arr.len() - 1);
+    }
+}
