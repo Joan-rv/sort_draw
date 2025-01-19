@@ -44,6 +44,7 @@ void DrawableArray::write(size_t i, size_t val) {
         std::lock_guard<std::mutex> guard(vec_mutex);
         vec[i] = val;
     }
+    std::this_thread::sleep_for(delay);
 }
 
 void DrawableArray::swap(size_t i, size_t j) {
