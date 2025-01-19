@@ -7,7 +7,9 @@
 DrawableArray::DrawableArray(size_t n, sf::Vector2u size, unsigned int padding,
                              std::chrono::nanoseconds delay)
     : n(n), size(size), padding(padding), rand_func(std::random_device()()),
-      delay(delay) {
+      delay(delay),
+      sine_sound_buffer("../resources/100Hz_44100Hz_16bit_05sec.wav"),
+      sine_sound(sine_sound_buffer) {
     if (size.x % n != 0 || size.x / n <= padding || size.y % n != 0 ||
         size.y / n < 1) {
         throw std::invalid_argument(
@@ -35,7 +37,10 @@ size_t DrawableArray::at(size_t i) {
         std::lock_guard<std::mutex> guard(vec_mutex);
         val = vec[i];
     }
+    sine_sound.setPitch(static_cast<double>(val) / n * 22.0);
+    sine_sound.play();
     std::this_thread::sleep_for(delay);
+    sine_sound.stop();
     return val;
 }
 
@@ -44,15 +49,23 @@ void DrawableArray::write(size_t i, size_t val) {
         std::lock_guard<std::mutex> guard(vec_mutex);
         vec[i] = val;
     }
+    sine_sound.setPitch(static_cast<double>(val) / n * 22.0);
+    sine_sound.play();
     std::this_thread::sleep_for(delay);
+    sine_sound.stop();
 }
 
 void DrawableArray::swap(size_t i, size_t j) {
+    double avg;
     {
         std::lock_guard<std::mutex> guard(vec_mutex);
         std::swap(vec[i], vec[j]);
+        avg = static_cast<double>(vec[i] + vec[j]) / 2;
     }
+    sine_sound.setPitch(avg / n * 22.0);
+    sine_sound.play();
     std::this_thread::sleep_for(delay);
+    sine_sound.stop();
 }
 
 void DrawableArray::draw(sf::RenderTarget& target,

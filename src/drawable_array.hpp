@@ -1,4 +1,5 @@
 #pragma once
+#include <SFML/Audio.hpp>
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
@@ -27,4 +28,6 @@ private:
     const unsigned int padding;
     std::mt19937 rand_func;
     const std::chrono::nanoseconds delay;
+    sf::SoundBuffer sine_sound_buffer;
+    sf::Sound sine_sound;
 };
