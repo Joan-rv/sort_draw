@@ -18,7 +18,7 @@ FetchContent_Declare(SFML
     FIND_PACKAGE_ARGS 3 COMPONENTS Graphics)
 FetchContent_MakeAvailable(SFML)
 
-target_link_libraries(sort_draw SFML::Graphics ${Boost_LIBRARIES})
+target_link_libraries(sort_draw SFML::Graphics)
 
 target_compile_features(sort_draw PRIVATE cxx_std_17)
 
