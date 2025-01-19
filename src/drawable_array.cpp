@@ -22,6 +22,7 @@ DrawableArray::DrawableArray(size_t n, sf::Vector2u size, unsigned int padding,
     for (size_t i = 0; i < n; i++) {
         vec.push_back(i + 1);
     }
+    sine_sound.setLooping(true);
     randomise();
 }
 
@@ -40,7 +41,7 @@ size_t DrawableArray::at(size_t i) {
     sine_sound.setPitch(static_cast<double>(val) / n * 22.0);
     sine_sound.play();
     std::this_thread::sleep_for(delay);
-    sine_sound.stop();
+    sine_sound.pause();
     return val;
 }
 
@@ -52,7 +53,7 @@ void DrawableArray::write(size_t i, size_t val) {
     sine_sound.setPitch(static_cast<double>(val) / n * 22.0);
     sine_sound.play();
     std::this_thread::sleep_for(delay);
-    sine_sound.stop();
+    sine_sound.pause();
 }
 
 void DrawableArray::swap(size_t i, size_t j) {
@@ -65,7 +66,7 @@ void DrawableArray::swap(size_t i, size_t j) {
     sine_sound.setPitch(avg / n * 22.0);
     sine_sound.play();
     std::this_thread::sleep_for(delay);
-    sine_sound.stop();
+    sine_sound.pause();
 }
 
 void DrawableArray::draw(sf::RenderTarget& target,
