@@ -36,7 +36,8 @@ void DrawableArray::randomise() {
 size_t DrawableArray::len() { return n; }
 
 void DrawableArray::delay_with_sound(size_t val) {
-    sine_sound.setPitch(static_cast<double>(val) / n * 21.0 + 1.0);
+    // sine wave from 100*(0 + 1) to 100*(10 + 1) Hz
+    sine_sound.setPitch(static_cast<double>(val) / n * 10.0 + 1.0);
     sine_sound.play();
     std::this_thread::sleep_for(delay);
     sine_sound.pause();
