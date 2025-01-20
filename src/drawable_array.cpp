@@ -2,6 +2,7 @@
 #include <chrono>
 #include <drawable_array.hpp>
 #include <mutex>
+#include <optional>
 #include <stdexcept>
 #include <thread>
 DrawableArray::DrawableArray(size_t n, sf::Vector2u size, unsigned int padding,
@@ -9,7 +10,7 @@ DrawableArray::DrawableArray(size_t n, sf::Vector2u size, unsigned int padding,
     : n(n), size(size), padding(padding), rand_func(std::random_device()()),
       delay(delay),
       sine_sound_buffer("../resources/100Hz_44100Hz_16bit_05sec.wav"),
-      sine_sound(sine_sound_buffer) {
+      sine_sound(sine_sound_buffer), op({None, std::nullopt, std::nullopt}) {
     if (size.x % n != 0 || size.x / n <= padding || size.y % n != 0 ||
         size.y / n < 1) {
         throw std::invalid_argument(
@@ -41,9 +42,11 @@ void DrawableArray::delay_with_sound(size_t val) {
     sine_sound.play();
     std::this_thread::sleep_for(delay);
     sine_sound.pause();
+    op = {None, std::nullopt, std::nullopt};
 }
 
 size_t DrawableArray::at(size_t i) {
+    op = {Read, i, std::nullopt};
     size_t val;
     {
         std::lock_guard<std::mutex> guard(vec_mutex);
@@ -54,6 +57,7 @@ size_t DrawableArray::at(size_t i) {
 }
 
 void DrawableArray::write(size_t i, size_t val) {
+    op = {Write, i, std::nullopt};
     {
         std::lock_guard<std::mutex> guard(vec_mutex);
         vec[i] = val;
@@ -62,6 +66,7 @@ void DrawableArray::write(size_t i, size_t val) {
 }
 
 void DrawableArray::swap(size_t i, size_t j) {
+    op = {Swap, i, j};
     double avg;
     {
         std::lock_guard<std::mutex> guard(vec_mutex);
@@ -73,10 +78,19 @@ void DrawableArray::swap(size_t i, size_t j) {
 
 void DrawableArray::draw(sf::RenderTarget& target,
                          sf::RenderStates states) const {
+    Operation curr_op = op.load();
     states.transform.combine(getTransform());
     unsigned int rect_width = size.x / n;
     unsigned int rect_height = size.y / n;
     for (size_t i = 0; i < n; i++) {
+        sf::Color color = sf::Color::White;
+        if (curr_op.param1 == i || curr_op.param2 == i) {
+            if (curr_op.type == Read) {
+                color = sf::Color::Green;
+            } else if (curr_op.type == Swap || curr_op.type == Write) {
+                color = sf::Color::Red;
+            }
+        }
         size_t val;
         {
             std::lock_guard<std::mutex> guard(vec_mutex);
@@ -84,6 +98,7 @@ void DrawableArray::draw(sf::RenderTarget& target,
         }
         sf::RectangleShape rect(
             sf::Vector2f(rect_width - padding, rect_height * val));
+        rect.setFillColor(color);
         rect.setPosition(
             sf::Vector2f(padding + rect_width * i, rect_height * (n - val)));
         target.draw(rect, states);

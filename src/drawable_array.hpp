@@ -4,10 +4,25 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/System/Vector2.hpp>
+#include <atomic>
 #include <chrono>
 #include <cstddef>
 #include <mutex>
 #include <random>
+
+enum OperationType {
+    None,
+    Read,
+    Swap,
+    Write,
+};
+
+struct Operation {
+    OperationType type;
+    std::optional<size_t> param1;
+    std::optional<size_t> param2;
+};
+
 class DrawableArray : public sf::Drawable, public sf::Transformable {
 public:
     DrawableArray(size_t n, sf::Vector2u size, unsigned int padding,
@@ -30,6 +45,7 @@ private:
     const std::chrono::nanoseconds delay;
     sf::SoundBuffer sine_sound_buffer;
     sf::Sound sine_sound;
+    std::atomic<Operation> op;
 
     void delay_with_sound(size_t val);
 };
