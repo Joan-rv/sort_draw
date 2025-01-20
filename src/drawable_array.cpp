@@ -27,7 +27,10 @@ DrawableArray::DrawableArray(size_t n, sf::Vector2u size, unsigned int padding,
 }
 
 void DrawableArray::randomise() {
-    std::shuffle(vec.begin(), vec.end(), rand_func);
+    {
+        std::lock_guard<std::mutex> guard(vec_mutex);
+        std::shuffle(vec.begin(), vec.end(), rand_func);
+    }
 }
 
 size_t DrawableArray::len() { return n; }
