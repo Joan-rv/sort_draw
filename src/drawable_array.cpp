@@ -32,16 +32,20 @@ void DrawableArray::randomise() {
 
 size_t DrawableArray::len() { return n; }
 
+void DrawableArray::delay_with_sound(size_t val) {
+    sine_sound.setPitch(static_cast<double>(val) / n * 21.0 + 1.0);
+    sine_sound.play();
+    std::this_thread::sleep_for(delay);
+    sine_sound.pause();
+}
+
 size_t DrawableArray::at(size_t i) {
     size_t val;
     {
         std::lock_guard<std::mutex> guard(vec_mutex);
         val = vec[i];
     }
-    sine_sound.setPitch(static_cast<double>(val) / n * 21.0 + 1.0);
-    sine_sound.play();
-    std::this_thread::sleep_for(delay);
-    sine_sound.pause();
+    delay_with_sound(val);
     return val;
 }
 
@@ -50,10 +54,7 @@ void DrawableArray::write(size_t i, size_t val) {
         std::lock_guard<std::mutex> guard(vec_mutex);
         vec[i] = val;
     }
-    sine_sound.setPitch(static_cast<double>(val) / n * 21.0 + 1.0);
-    sine_sound.play();
-    std::this_thread::sleep_for(delay);
-    sine_sound.pause();
+    delay_with_sound(val);
 }
 
 void DrawableArray::swap(size_t i, size_t j) {
@@ -63,10 +64,7 @@ void DrawableArray::swap(size_t i, size_t j) {
         std::swap(vec[i], vec[j]);
         avg = static_cast<double>(vec[i] + vec[j]) / 2;
     }
-    sine_sound.setPitch(avg / n * 21.0 + 1.0);
-    sine_sound.play();
-    std::this_thread::sleep_for(delay);
-    sine_sound.pause();
+    delay_with_sound(avg);
 }
 
 void DrawableArray::draw(sf::RenderTarget& target,

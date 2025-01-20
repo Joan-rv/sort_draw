@@ -30,4 +30,6 @@ private:
     const std::chrono::nanoseconds delay;
     sf::SoundBuffer sine_sound_buffer;
     sf::Sound sine_sound;
+
+    void delay_with_sound(size_t val);
 };
