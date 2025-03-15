@@ -15,7 +15,7 @@ FetchContent_Declare(SFML
     GIT_SHALLOW ON
     EXCLUDE_FROM_ALL
     SYSTEM
-    FIND_PACKAGE_ARGS 3 COMPONENTS Graphics)
+    FIND_PACKAGE_ARGS 3 COMPONENTS Graphics Audio)
 FetchContent_MakeAvailable(SFML)
 
 target_link_libraries(sort_draw SFML::Graphics SFML::Audio atomic)
